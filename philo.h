@@ -32,6 +32,7 @@ typedef struct s_philo
 	pthread_mutex_t	*fork_2;
 	pthread_mutex_t	*printing_lock;
 	pthread_mutex_t	*death_lock;
+	pthread_mutex_t	*meals_lock;
 }					t_philo;
 
 void				ft_clear(t_philo *philos);

@@ -33,7 +33,7 @@ void	*simulate_dinner(void *arg)
 		print_state(*philo, SLEEP, time_now(), philo->printing_lock);
 		ft_sleep(philo->time_to_sleep);
 	}
-//	pthread_mutex_unlock(philo->death_lock);
+	pthread_mutex_unlock(philo->death_lock);
 	return (0);
 }
 
@@ -50,15 +50,16 @@ int	everyone_alive(t_philo *philo)
 			pthread_mutex_unlock(philo[i].death_lock);
 			print_state(philo[i], DEAD, time_now(), philo[i].printing_lock);
 			i = 0;
+			pthread_mutex_lock(philo[0].death_lock);
 			while (i < philo[0].nbr_philos)
 			{
 	//		printf("All philosophers are dead\n");
-				pthread_mutex_lock(philo[i].death_lock);
 				philo[i].dead = 1;
-				pthread_mutex_unlock(philo[i].death_lock);
+				pthread_mutex_unlock(philo[i].fork_1);
 				pthread_mutex_destroy(philo[i].fork_1);
 				i++;
 			}
+			pthread_mutex_unlock(philo[0].death_lock);
 		//	pthread_mutex_unlock(philo[i].death_lock);
 			pthread_mutex_destroy(philo->printing_lock);
 			return (0);

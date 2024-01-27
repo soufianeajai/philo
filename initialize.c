@@ -1,7 +1,7 @@
 #include "philo.h"
 
 void	ft_initialize(t_philo *philos, t_philo input,
-		pthread_mutex_t *printing_lock, pthread_mutex_t *death_lock)
+		pthread_mutex_t *printing_lock, pthread_mutex_t *death_lock, pthread_mutex_t *meals_lock)
 {
 	int	i;
 
@@ -22,6 +22,7 @@ void	ft_initialize(t_philo *philos, t_philo input,
 		philos[i].fork_1 = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
 	//	philos[i].fork_2 = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
 		philos[i].death_lock = death_lock;
+		philos[i].meals_lock = meals_lock;
 		i++;
 	}
 	forks_init(philos);
