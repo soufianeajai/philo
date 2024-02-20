@@ -1,6 +1,6 @@
 NAME=philo
 
-CFLAGS= -Wall -Wextra -Werror -pthread -g3 -fsanitize=thread
+CFLAGS= -Wall -Wextra -Werror -pthread #-fsanitize=thread
 
 SRS= main.c parser.c initialize.c dinner.c
 
@@ -9,7 +9,7 @@ OBJ = $(SRS:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	cc $(CFLAGS) $(OBJ) -o $(NAME)
+	cc  $(CFLAGS) $(OBJ) -o $(NAME)
 
 fclean: clean
 	rm -f $(NAME)

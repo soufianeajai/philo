@@ -3,30 +3,18 @@
 int	main(int ac, char **av)
 {
 	t_philo			input;
-	t_philo			*philos;
-	pthread_mutex_t	printing_lock;
-	pthread_mutex_t	death_lock;
-	pthread_mutex_t	meals_lock;
+	t_data			data;
+	pthread_t		waiter;
 
-	if (ac != 5 && ac != 6)
+	if ((ac != 5 && ac != 6) || ft_atoi(av[1]) <= 0)
 		exit(0);
 	parse_input(&input, av);
-	pthread_mutex_init(&printing_lock, NULL);
-	pthread_mutex_init(&death_lock, NULL);
-	pthread_mutex_init(&meals_lock, NULL);
-	philos = malloc(input.nbr_philos * sizeof(t_philo));
-	if (!philos)
+	data.philos = malloc(input.nbr_philos * sizeof(t_philo));
+	if (!data.philos)
 		exit(1);
-	ft_initialize(philos, input, &printing_lock, &death_lock);
-	create_threads(philos, simulate_dinner);
-	while (1)
-	{
-		if (!everyone_alive(philos) || !philos_still_hungry(philos))
-			break ;
-//		printf("%d\n", everyone_alive(philos));
-	}
-//	printf("All philosophers are full\n");
-	pthread_mutex_destroy(&printing_lock);
-	pthread_mutex_destroy(&death_lock);
-	ft_clear(philos);
-}
+	ft_initialize(&data, input);
+	create_threads(data.philos, simulate_dinner, &waiter);
+	ft_clear(&data);
+//	system("leaks philo");
+	return (0);
+ }

@@ -19,7 +19,7 @@ int	ft_isdigit(char *str)
 	return (1);
 }
 
-size_t	ft_atoi(const char *str)
+size_t	ft_atoi(char *str)
 {
 	size_t	nbr;
 	int		signe;
@@ -42,7 +42,7 @@ size_t	ft_atoi(const char *str)
 	return (signe * nbr);
 }
 
-void	ft_assign(t_philo *input, size_t nbr, int flag)
+void	ft_assign(t_philo *input, long nbr, int flag)
 {
 	if (flag == 1)
 		input->nbr_philos = nbr;
@@ -57,7 +57,7 @@ void	ft_assign(t_philo *input, size_t nbr, int flag)
 		if (nbr > 0)
 			input->nbr_meals = nbr;
 		else
-			exit(0);
+			exit(1);
 	}
 	else
 		input->nbr_meals = -1;
@@ -83,17 +83,21 @@ void	parse_input(t_philo *input, char **av)
 		input->nbr_meals = -1;
 }
 
-void	ft_clear(t_philo *philos)
+void	ft_clear(t_data *data)
 {
 	int	i;
 	int	nbr_philos;
 
 	i = 0;
-	nbr_philos = philos[0].nbr_philos;
+	nbr_philos = data->philos[0].nbr_philos;
+	pthread_mutex_destroy(&data->meals_lock);
+	pthread_mutex_destroy(&data->death_lock);
+	pthread_mutex_destroy(&data->printing_lock);
 	while (i < nbr_philos)
 	{
-		free(&philos[i]);
+		free(data->philos[i].fork_1);
+		pthread_mutex_destroy(data->philos[i].fork_1);
 		i++;
 	}
-	free(philos);
+	free(data->philos);
 }
