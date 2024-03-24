@@ -125,4 +125,4 @@ void	print_state(t_philo philo, char *state, size_t time,
 	printf("%lu %d %s\n", (time - philo.start_time), philo.id, state);
 	pthread_mutex_unlock(lock);
 }
-// do not change anything in this function !!!!!~!
+
