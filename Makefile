@@ -1,6 +1,6 @@
 NAME=philo
 
-CFLAGS= -Wall -Wextra -Werror -pthread #-fsanitize=thread
+CFLAGS= -Wall -Wextra -Werror -pthread #-g -fsanitize=thread
 
 SRS= main.c parser.c initialize.c dinner.c
 

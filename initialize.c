@@ -4,9 +4,9 @@ void	ft_initialize(t_data *data, t_philo input)
 {
 	int	i;
 
-	i = 0;
+	i = -1;
 	init_mutexes(data);
-	while (i < input.nbr_philos)
+	while (++i < input.nbr_philos)
 	{
 		data->philos[i].id = i + 1;
 		data->philos[i].nbr_philos = input.nbr_philos;
@@ -24,8 +24,7 @@ void	ft_initialize(t_data *data, t_philo input)
 		data->philos[i].meals_lock = &data->meals_lock;
 		data->philos[i].is_dead = &data->is_dead;
 		data->philos[i].start_dinner = &data->start_dinner;
-		data->philos[i].fork_1 = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
-		i++;
+		data->philos[i].fork_1 = malloc(sizeof(pthread_mutex_t));
 	}
 	forks_init(data->philos);
 }
@@ -40,8 +39,8 @@ void	init_mutexes(t_data *data)
 
 void	forks_init(t_philo *philos)
 {
-	int				i;
-	int				nbr_philos;
+	int	i;
+	int	nbr_philos;
 
 	i = 0;
 	nbr_philos = philos[0].nbr_philos;
@@ -58,7 +57,23 @@ void	forks_init(t_philo *philos)
 	}
 }
 
-void	create_threads(t_philo *philos, void *simulate_dinner, pthread_t *waiter)
+void	join_threads(t_philo *philos, pthread_t *waiter)
+{
+	int	i;
+	int	nbr_philos;
+
+	i = 0;
+	nbr_philos = philos[0].nbr_philos;
+	pthread_join(*waiter, NULL);
+	while (i < nbr_philos)
+	{
+		pthread_join(philos[i].philo_thread, NULL);
+		i++;
+	}
+}
+
+void	create_threads(t_philo *philos, void *simulate_dinner,
+		pthread_t *waiter)
 {
 	int	i;
 	int	nbr_philos;
@@ -69,7 +84,7 @@ void	create_threads(t_philo *philos, void *simulate_dinner, pthread_t *waiter)
 	while (i < nbr_philos)
 	{
 		pthread_create(&philos[i].philo_thread, NULL, simulate_dinner,
-				(void *)&philos[i]);
+			(void *)&philos[i]);
 		i = i + 2;
 	}
 	*philos->start_dinner = 1;
@@ -78,18 +93,11 @@ void	create_threads(t_philo *philos, void *simulate_dinner, pthread_t *waiter)
 	while (i < nbr_philos)
 	{
 		pthread_create(&philos[i].philo_thread, NULL, simulate_dinner,
-				(void *)&philos[i]);
+			(void *)&philos[i]);
 		i = i + 2;
 	}
-	i = 0;
-	pthread_join(*waiter, NULL);
-	while (i < nbr_philos)
-	{
-		pthread_join(philos[i].philo_thread, NULL);
-		i++;
-	}
+	join_threads(philos, waiter);
 }
-
 
 void	ft_sleep(size_t exact_time)
 {
@@ -97,7 +105,7 @@ void	ft_sleep(size_t exact_time)
 
 	time = time_now();
 	while (time_now() < time + exact_time)
-		usleep(GRANULARITY_US);
+		usleep(500);
 }
 
 size_t	time_now(void)

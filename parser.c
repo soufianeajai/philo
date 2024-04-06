@@ -19,9 +19,9 @@ int	ft_isdigit(char *str)
 	return (1);
 }
 
-size_t	ft_atoi(char *str)
+long	ft_atoi(char *str)
 {
-	size_t	nbr;
+	long	nbr;
 	int		signe;
 
 	signe = 1;
