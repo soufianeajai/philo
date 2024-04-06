@@ -43,10 +43,8 @@ void	*simulate_dinner(void *arg)
 void	*supervise(void *arg)
 {
 	t_philo	*philo;
-	int		i;
 	int		flag;
 
-	i = 0;
 	flag = 1;
 	philo = (t_philo *)arg;
 	pthread_mutex_lock(philo[0].meals_lock);
