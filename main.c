@@ -14,7 +14,7 @@ int	main(int ac, char **av)
 	parse_input(&input, av);
 	data.philos = malloc(input.nbr_philos * sizeof(t_philo));
 	if (!data.philos)
-		exit(1);
+		return (1);
 	ft_initialize(&data, input);
 	create_threads(data.philos, simulate_dinner, &waiter);
 	ft_clear(&data);

@@ -73,6 +73,7 @@ void	parse_input(t_philo *input, char **av)
 	{
 		if (!ft_isdigit(av[i]))
 		{
+			write(2, "Enter a valid input\n", 21);
 			exit(1);
 		}
 		nbr = ft_atoi(av[i]);

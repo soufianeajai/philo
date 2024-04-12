@@ -11,7 +11,28 @@ void	eat(t_philo *philo)
 	pthread_mutex_unlock(philo->fork_2);
 	pthread_mutex_unlock(philo->fork_1);
 }
-
+int	check_simulation(t_philo *philo, int flag)
+{
+	if (flag == 1)
+	{
+		pthread_mutex_lock(philo->death_lock);
+		if (*philo->is_dead || philo->is_full)
+		{
+			pthread_mutex_unlock(philo->death_lock);
+			return (1);
+		}
+		pthread_mutex_unlock(philo->death_lock);
+	}
+	else
+	{
+		if (philo->nbr_philos == 1)
+		{
+			pthread_mutex_unlock(philo->fork_1);
+			return (1);
+		}
+	}
+	return (0);
+}
 void	*simulate_dinner(void *arg)
 {
 	t_philo	*philo;
@@ -22,14 +43,25 @@ void	*simulate_dinner(void *arg)
 		if (philo->start_dinner)
 		{
 			print_state(*philo, THINK, time_now(), philo->printing_lock);
-			pthread_mutex_lock(philo->death_lock);
-			if ((*philo->is_dead) || philo->is_full)
+			if (check_simulation(philo, 1))
 				break ;
-			pthread_mutex_unlock(philo->death_lock);
+			// pthread_mutex_lock(philo->death_lock);
+			// if ((*philo->is_dead) || philo->is_full)
+			// {
+			// 	pthread_mutex_unlock(philo->death_lock);
+			// 	break ;
+			// }
+			// pthread_mutex_unlock(philo->death_lock);
 			pthread_mutex_lock(philo->fork_1);
 			print_state(*philo, TAKE_FORK, time_now(), philo->printing_lock);
-			if (philo->nbr_philos == 1)
+			if (check_simulation(philo, 0))
 				break ;
+			
+			// if (philo->nbr_philos == 1)
+			// {
+			// 	pthread_mutex_unlock(philo->fork_1);
+			// 	break ;
+			// }
 			pthread_mutex_lock(philo->fork_2);
 			print_state(*philo, TAKE_FORK, time_now(), philo->printing_lock);
 			eat(philo);
@@ -37,7 +69,6 @@ void	*simulate_dinner(void *arg)
 			ft_sleep(philo->time_to_sleep);
 		}
 	}
-	pthread_mutex_unlock(philo->death_lock);
 	return (0);
 }
 void	*supervise(void *arg)
