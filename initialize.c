@@ -98,20 +98,3 @@ void	create_threads(t_philo *philos, void *simulate_dinner,
 	}
 	join_threads(philos, waiter);
 }
-
-void	ft_sleep(size_t exact_time)
-{
-	size_t	time;
-
-	time = time_now();
-	while (time_now() < time + exact_time)
-		usleep(500);
-}
-
-size_t	time_now(void)
-{
-	struct timeval	time;
-
-	gettimeofday(&time, NULL);
-	return ((time.tv_sec * MIL_SEC_COEF) + (time.tv_usec / MIL_SEC_COEF));
-}

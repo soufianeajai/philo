@@ -96,7 +96,6 @@ void	ft_clear(t_data *data)
 	pthread_mutex_destroy(&data->printing_lock);
 	while (i < nbr_philos)
 	{
-		pthread_mutex_unlock(data->philos[i].fork_1);
 		pthread_mutex_destroy(data->philos[i].fork_1);
 		free(data->philos[i].fork_1);
 		i++;

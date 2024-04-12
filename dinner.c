@@ -11,6 +11,7 @@ void	eat(t_philo *philo)
 	pthread_mutex_unlock(philo->fork_2);
 	pthread_mutex_unlock(philo->fork_1);
 }
+
 int	check_simulation(t_philo *philo, int flag)
 {
 	if (flag == 1)
@@ -33,6 +34,7 @@ int	check_simulation(t_philo *philo, int flag)
 	}
 	return (0);
 }
+
 void	*simulate_dinner(void *arg)
 {
 	t_philo	*philo;
@@ -45,23 +47,10 @@ void	*simulate_dinner(void *arg)
 			print_state(*philo, THINK, time_now(), philo->printing_lock);
 			if (check_simulation(philo, 1))
 				break ;
-			// pthread_mutex_lock(philo->death_lock);
-			// if ((*philo->is_dead) || philo->is_full)
-			// {
-			// 	pthread_mutex_unlock(philo->death_lock);
-			// 	break ;
-			// }
-			// pthread_mutex_unlock(philo->death_lock);
 			pthread_mutex_lock(philo->fork_1);
 			print_state(*philo, TAKE_FORK, time_now(), philo->printing_lock);
 			if (check_simulation(philo, 0))
 				break ;
-			
-			// if (philo->nbr_philos == 1)
-			// {
-			// 	pthread_mutex_unlock(philo->fork_1);
-			// 	break ;
-			// }
 			pthread_mutex_lock(philo->fork_2);
 			print_state(*philo, TAKE_FORK, time_now(), philo->printing_lock);
 			eat(philo);
@@ -70,79 +59,6 @@ void	*simulate_dinner(void *arg)
 		}
 	}
 	return (0);
-}
-void	*supervise(void *arg)
-{
-	t_philo	*philo;
-	int		flag;
-
-	flag = 1;
-	philo = (t_philo *)arg;
-	pthread_mutex_lock(philo[0].meals_lock);
-	if (philo[0].nbr_meals == -1)
-		flag = -1;
-	pthread_mutex_unlock(philo[0].meals_lock);
-	while (1)
-	{
-		if (flag == -1)
-		{
-			if (!everyone_alive(philo))
-				break ;
-		}
-		else
-		{
-			if (!everyone_alive(philo) || !philos_still_hungry(philo))
-				break ;
-		}
-	}
-	return (0);
-}
-int	everyone_alive(t_philo *philo)
-{
-	int	i;
-
-	i = 0;
-	while (i < philo[0].nbr_philos)
-	{
-		pthread_mutex_lock(philo[i].meals_lock);
-		if (time_now() - philo[i].last_meal >= (size_t)philo[i].time_to_die)
-		{
-			pthread_mutex_unlock(philo[i].meals_lock);
-			print_state(philo[i], DEAD, time_now(), philo[i].printing_lock);
-			pthread_mutex_lock(philo[i].death_lock);
-			*(philo[i].is_dead) = 1;
-			pthread_mutex_unlock(philo[i].death_lock);
-			return (0);
-		}
-		pthread_mutex_unlock(philo[i].meals_lock);
-		i++;
-	}
-	return (1);
-}
-
-int	philos_still_hungry(t_philo *philo)
-{
-	int	i;
-	int	everyone_full;
-
-	i = 0;
-	everyone_full = 0;
-	while ((i < philo[0].nbr_philos))
-	{
-		pthread_mutex_lock(philo[i].meals_lock);
-		if (philo[i].nbr_meals == 0)
-		{
-			pthread_mutex_lock(philo[i].death_lock);
-			philo[i].is_full = 1;
-			pthread_mutex_unlock(philo[i].death_lock);
-			everyone_full++;
-		}
-		pthread_mutex_unlock(philo[i].meals_lock);
-		i++;
-	}
-	if (everyone_full == philo[0].nbr_philos)
-		return (0);
-	return (1);
 }
 
 void	print_state(t_philo philo, char *state, size_t time,
