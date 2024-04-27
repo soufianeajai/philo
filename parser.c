@@ -19,7 +19,7 @@ int	ft_isdigit(char *str)
 	return (1);
 }
 
-long	ft_atoi(char *str)
+size_t	ft_atoi(char *str)
 {
 	long	nbr;
 	int		signe;
@@ -42,7 +42,7 @@ long	ft_atoi(char *str)
 	return (signe * nbr);
 }
 
-void	ft_assign(t_philo *input, long nbr, int flag)
+int	ft_assign(t_philo *input, long nbr, int flag)
 {
 	if (flag == 1)
 		input->nbr_philos = nbr;
@@ -57,13 +57,14 @@ void	ft_assign(t_philo *input, long nbr, int flag)
 		if (nbr > 0)
 			input->nbr_meals = nbr;
 		else
-			exit(1);
+			return(1);
 	}
 	else
 		input->nbr_meals = -1;
+	return (0);
 }
 
-void	parse_input(t_philo *input, char **av)
+int	parse_input(t_philo *input, char **av)
 {
 	int	nbr;
 	int	i;
@@ -74,17 +75,19 @@ void	parse_input(t_philo *input, char **av)
 		if (!ft_isdigit(av[i]))
 		{
 			write(2, "Enter a valid input\n", 21);
-			exit(1);
+			return (1);
 		}
 		nbr = ft_atoi(av[i]);
-		ft_assign(input, nbr, i);
+		if (ft_assign(input, nbr, i))
+			return (1);
 		i++;
 	}
 	if (i == 5)
 		input->nbr_meals = -1;
+	return (0);
 }
 
-void	ft_clear(t_data *data)
+int	ft_clear(t_data *data, int alloc_err)
 {
 	int	i;
 	int	nbr_philos;
@@ -94,11 +97,20 @@ void	ft_clear(t_data *data)
 	pthread_mutex_destroy(&data->meals_lock);
 	pthread_mutex_destroy(&data->death_lock);
 	pthread_mutex_destroy(&data->printing_lock);
-	while (i < nbr_philos)
+	if (alloc_err == -1)
 	{
-		pthread_mutex_destroy(data->philos[i].fork_1);
-		free(data->philos[i].fork_1);
-		i++;
+		while (i < nbr_philos)
+		{
+			pthread_mutex_destroy(data->philos[i].fork_1);
+			free(data->philos[i].fork_1);
+			i++;
+		}
+	}
+	else
+	{
+		while (i < alloc_err)
+			free(data->philos[i++].fork_1);
 	}
 	free(data->philos);
+	return (1);
 }

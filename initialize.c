@@ -1,12 +1,11 @@
 #include "philo.h"
 
-void	ft_initialize(t_data *data, t_philo input)
+void	ft_initialize(t_data *data, t_philo input, int *alloc_err)
 {
 	int	i;
 
 	i = -1;
-	init_mutexes(data);
-	while (++i < input.nbr_philos)
+	while ((++i < input.nbr_philos) && (*alloc_err == -1))
 	{
 		data->philos[i].id = i + 1;
 		data->philos[i].nbr_philos = input.nbr_philos;
@@ -25,8 +24,9 @@ void	ft_initialize(t_data *data, t_philo input)
 		data->philos[i].is_dead = &data->is_dead;
 		data->philos[i].start_dinner = &data->start_dinner;
 		data->philos[i].fork_1 = malloc(sizeof(pthread_mutex_t));
+		if (!data->philos[i].fork_1)
+			*alloc_err = i + 1;
 	}
-	forks_init(data->philos);
 }
 
 void	init_mutexes(t_data *data)
@@ -72,29 +72,24 @@ void	join_threads(t_philo *philos, pthread_t *waiter)
 	}
 }
 
-void	create_threads(t_philo *philos, void *simulate_dinner,
-		pthread_t *waiter)
+int handle_input_errors(int ac, char **av, t_philo *input)
 {
-	int	i;
-	int	nbr_philos;
-
-	i = 0;
-	nbr_philos = philos[i].nbr_philos;
-	pthread_create(waiter, NULL, supervise, (void *)philos);
-	while (i < nbr_philos)
+	if ((ac != 5 && ac != 6) || ft_atoi(av[1]) <= 0)
 	{
-		pthread_create(&philos[i].philo_thread, NULL, simulate_dinner,
-			(void *)&philos[i]);
-		i = i + 2;
+		write(2, "Enter a valid input\n", 21);
+		return(1);
 	}
-	*philos->start_dinner = 1;
-	ft_sleep(50);
-	i = 1;
-	while (i < nbr_philos)
+	if (ft_atoi(av[1]) > PTHREAD_THREADS_MAX)
 	{
-		pthread_create(&philos[i].philo_thread, NULL, simulate_dinner,
-			(void *)&philos[i]);
-		i = i + 2;
+		printf("Thread limit (8128 threads) exceeded. Dying.\n");
+		return (1);
+	}	
+	if (parse_input(input, av))
+		return (1);
+	if (input->time_to_die == 0)
+	{
+		printf("0 1 died\n");
+		return (1);
 	}
-	join_threads(philos, waiter);
+	return (0);
 }

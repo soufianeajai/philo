@@ -13,6 +13,7 @@
 # define THINK "is thinking"
 # define DEAD "died"
 # define MIL_SEC_COEF 1000
+# define PTHREAD_THREADS_MAX 8128
 
 typedef struct s_philo
 {
@@ -48,24 +49,28 @@ typedef struct s_data
 	t_philo			*philos;
 }					t_data;
 
-void				ft_clear(t_data *data);
+int				ft_clear(t_data *data, int flag);
 void				ft_sleep(size_t exact_time);
 void				*simulate_dinner(void *arg);
 int					everyone_alive(t_philo *philo);
 void				*supervise(void *arg);
 int					philos_still_hungry(t_philo *philo);
 size_t				time_now(void);
-void				ft_initialize(t_data *data, t_philo input);
+void				ft_initialize(t_data *data, t_philo input, int *alloc_err);
 void				forks_init(t_philo *philos);
-void				create_threads(t_philo *philos, void *simulate_dinner,
+int					create_threads(t_philo *philos, void *simulate_dinner,
 						pthread_t *waiter);
 void				print_state(t_philo philo, char *state, size_t time,
 						pthread_mutex_t *printing_lock);
 int					ft_isdigit(char *str);
-long				ft_atoi(char *str);
-void				ft_assign(t_philo *input, long nbr, int flag);
-void				parse_input(t_philo *input, char **av);
+size_t				ft_atoi(char *str);
+int					ft_assign(t_philo *input, long nbr, int flag);
+int					parse_input(t_philo *input, char **av);
 void				init_mutexes(t_data *data);
 void				eat(t_philo *philo);
+int handle_input_errors(int ac, char **av, t_philo *input);
+void	join_threads(t_philo *philos, pthread_t *waiter);
+int	check_simulation(t_philo *philo, int flag);
+
 
 #endif
