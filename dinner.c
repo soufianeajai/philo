@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   dinner.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sajaite <sajaite@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/27 19:36:45 by sajaite           #+#    #+#             */
+/*   Updated: 2024/04/27 19:38:05 by sajaite          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 void	*simulate_dinner(void *arg)
@@ -25,6 +37,7 @@ void	*simulate_dinner(void *arg)
 	}
 	return (0);
 }
+
 void	eat(t_philo *philo)
 {
 	print_state(*philo, EAT, time_now(), philo->printing_lock);
@@ -74,8 +87,8 @@ void	print_state(t_philo philo, char *state, size_t time,
 	printf("%lu %d %s\n", (time - philo.start_time), philo.id, state);
 	pthread_mutex_unlock(lock);
 }
-int	create_threads(t_philo *philos, void *simulate_dinner,
-		pthread_t *waiter)
+
+int	create_threads(t_philo *philos, void *simulate_dinner, pthread_t *waiter)
 {
 	int	i;
 	int	nbr_philos;
@@ -86,7 +99,7 @@ int	create_threads(t_philo *philos, void *simulate_dinner,
 	while (i < nbr_philos)
 	{
 		if (pthread_create(&philos[i].philo_thread, NULL, simulate_dinner,
-			(void *)&philos[i]))
+				(void *)&philos[i]))
 		{
 			printf("Error in creating threads");
 			return (1);

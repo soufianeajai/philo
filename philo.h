@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sajaite <sajaite@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/27 19:37:28 by sajaite           #+#    #+#             */
+/*   Updated: 2024/04/27 19:37:29 by sajaite          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -49,7 +61,7 @@ typedef struct s_data
 	t_philo			*philos;
 }					t_data;
 
-int				ft_clear(t_data *data, int flag);
+int					ft_clear(t_data *data, int flag);
 void				ft_sleep(size_t exact_time);
 void				*simulate_dinner(void *arg);
 int					everyone_alive(t_philo *philo);
@@ -63,14 +75,13 @@ int					create_threads(t_philo *philos, void *simulate_dinner,
 void				print_state(t_philo philo, char *state, size_t time,
 						pthread_mutex_t *printing_lock);
 int					ft_isdigit(char *str);
-int				ft_atoi(char *str);
+int					ft_atoi(char *str);
 int					ft_assign(t_philo *input, long nbr, int flag);
 int					parse_input(t_philo *input, char **av);
 void				init_mutexes(t_data *data);
 void				eat(t_philo *philo);
-int handle_input_errors(int ac, char **av, t_philo *input);
-void	join_threads(t_philo *philos, pthread_t *waiter);
-int	check_simulation(t_philo *philo, int flag);
-
+int					handle_input_errors(int ac, char **av, t_philo *input);
+void				join_threads(t_philo *philos, pthread_t *waiter);
+int					check_simulation(t_philo *philo, int flag);
 
 #endif

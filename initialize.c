@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   initialize.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sajaite <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/27 19:36:55 by sajaite           #+#    #+#             */
+/*   Updated: 2024/04/27 19:36:57 by sajaite          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 void	ft_initialize(t_data *data, t_philo input, int *alloc_err)
@@ -72,18 +84,18 @@ void	join_threads(t_philo *philos, pthread_t *waiter)
 	}
 }
 
-int handle_input_errors(int ac, char **av, t_philo *input)
+int	handle_input_errors(int ac, char **av, t_philo *input)
 {
 	if ((ac != 5 && ac != 6) || ft_atoi(av[1]) <= 0)
 	{
 		write(2, "Enter a valid input\n", 21);
-		return(1);
+		return (1);
 	}
 	if (ft_atoi(av[1]) > PTHREAD_THREADS_MAX)
 	{
 		printf("Thread limit (8128 threads) exceeded. Dying.\n");
 		return (1);
-	}	
+	}
 	if (parse_input(input, av))
 		return (1);
 	if (input->time_to_die == 0)

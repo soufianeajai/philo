@@ -1,5 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sajaite <sajaite@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/27 19:37:26 by sajaite           #+#    #+#             */
+/*   Updated: 2024/04/27 19:37:27 by sajaite          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 #include <limits.h>
+
 int	ft_isdigit(char *str)
 {
 	int	i;
@@ -59,7 +72,7 @@ int	ft_assign(t_philo *input, long nbr, int flag)
 		if (nbr > 0)
 			input->nbr_meals = nbr;
 		else
-			return(1);
+			return (1);
 	}
 	else
 		input->nbr_meals = -1;
