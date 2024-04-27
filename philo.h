@@ -63,7 +63,7 @@ int					create_threads(t_philo *philos, void *simulate_dinner,
 void				print_state(t_philo philo, char *state, size_t time,
 						pthread_mutex_t *printing_lock);
 int					ft_isdigit(char *str);
-size_t				ft_atoi(char *str);
+int				ft_atoi(char *str);
 int					ft_assign(t_philo *input, long nbr, int flag);
 int					parse_input(t_philo *input, char **av);
 void				init_mutexes(t_data *data);

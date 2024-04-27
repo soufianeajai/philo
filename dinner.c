@@ -7,13 +7,11 @@ void	*simulate_dinner(void *arg)
 	philo = (t_philo *)arg;
 	if (philo->id % 2)
 		ft_sleep(50);
-	while (1)
+	if (philo->start_dinner)
 	{
-		if (philo->start_dinner)
+		while (!check_simulation(philo, 1))
 		{
 			print_state(*philo, THINK, time_now(), philo->printing_lock);
-			if (check_simulation(philo, 1))
-				break ;
 			pthread_mutex_lock(philo->fork_1);
 			print_state(*philo, TAKE_FORK, time_now(), philo->printing_lock);
 			if (check_simulation(philo, 0))

@@ -1,5 +1,5 @@
 #include "philo.h"
-
+#include <limits.h>
 int	ft_isdigit(char *str)
 {
 	int	i;
@@ -19,7 +19,7 @@ int	ft_isdigit(char *str)
 	return (1);
 }
 
-size_t	ft_atoi(char *str)
+int	ft_atoi(char *str)
 {
 	long	nbr;
 	int		signe;
@@ -37,9 +37,11 @@ size_t	ft_atoi(char *str)
 	while (*str >= '0' && *str <= '9')
 	{
 		nbr = (*str - '0') + (10 * nbr);
+		if (nbr > INT_MAX)
+			return (0);
 		str++;
 	}
-	return (signe * nbr);
+	return (signe * (int)nbr);
 }
 
 int	ft_assign(t_philo *input, long nbr, int flag)
